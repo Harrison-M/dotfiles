@@ -22,13 +22,13 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'morhetz/gruvbox'
-Plug 'Galooshi/vim-import-js'
-Plug 'yuezk/vim-js'
-Plug 'maxmellon/vim-jsx-pretty'
+" Plug 'Galooshi/vim-import-js'
+" Plug 'yuezk/vim-js'
+" Plug 'maxmellon/vim-jsx-pretty'
 Plug 'Yggdroot/indentLine'
 Plug 'scrooloose/nerdcommenter',
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'moll/vim-node'
+" Plug 'moll/vim-node'
 Plug 'vim-scripts/paredit.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-rhubarb'
@@ -47,7 +47,7 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'leafgarland/typescript-vim'
+" Plug 'leafgarland/typescript-vim'
 
 call plug#end()
 
@@ -57,6 +57,11 @@ let g:gruvbox_contrast_light = 'medium'
 let g:gruvbox_contrast_dark = 'medium'
 
 " coc
+let g:coc_filetype_map = {
+    \ 'tsx': 'typescriptreact',
+    \ 'stories.tsx': 'typescriptreact',
+\ }
+
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
@@ -279,7 +284,8 @@ let g:startify_custom_header_quotes = [
     \ ['priest plugs my coffin in at the end of the funeral. "MILLERTIME" lights up in neon on the side, desecrating my corspe & sending me to hell'],
     \ ['LISTEN UP NERD, THE WEIGHTS WITH HIEROGLYPHS ON THEM ARE IMPOSSIBLE TO LIFT UNLESS YOU POSSESS THE CORRESPONDING RUNESTONE, THIS IS HELL GYM'],
     \ ['the vatican should not be allowed to name any new saints until God sorts out my numerous issues with the citibank web portal'],
-    \ ["in a world where big data threatens to commodify our lives,. telling online surveys that i \"Don't Know\" what pringles are constitutes Heroism"]
+    \ ["in a world where big data threatens to commodify our lives,. telling online surveys that i \"Don't Know\" what pringles are constitutes Heroism"],
+    \ ['buy shares in the Markets.  i have a really good feeling about the markets']
     \ ]
 
 set exrc
