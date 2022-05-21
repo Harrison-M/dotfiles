@@ -1,0 +1,19 @@
+{
+    "coc.preferences.formatOnSaveFiletypes": ["rust", "typescript"],
+    "rust-analyzer.checkOnSave.command": "clippy",
+    "rust-analyzer.checkOnSave.extraArgs": [
+        "--target-dir",
+        "./target/ide-clippy",
+        "--",
+        "--warn=clippy::dbg_macro",
+        "--warn=clippy::unimplemented",
+        "--warn=clippy::todo",
+        "--warn=missing_docs",
+        "--deny=broken_intra_doc_links",
+        "--deny=clippy::undocumented_unsafe_blocks",
+        "--forbid=unused_must_use",
+        "--deny=clippy::as_conversions",
+        "--deny=clippy::result_unit_err"
+    ],
+    "sourcekit.commandPath": "/home/parallels/.swift/usr/bin/sourcekit-lsp"
+}

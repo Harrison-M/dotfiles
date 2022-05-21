@@ -12,23 +12,16 @@ call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Plug 'clojure-vim/async-clj-omni'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'morhetz/gruvbox'
-" Plug 'Galooshi/vim-import-js'
-" Plug 'yuezk/vim-js'
-" Plug 'maxmellon/vim-jsx-pretty'
 Plug 'Yggdroot/indentLine'
 Plug 'scrooloose/nerdcommenter',
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-" Plug 'moll/vim-node'
 Plug 'vim-scripts/paredit.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-rhubarb'
@@ -40,14 +33,15 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'fannheyward/telescope-coc.nvim'
 
-Plug 'ternjs/tern_for_vim'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'dhruvasagar/vim-table-mode'
-" Plug 'leafgarland/typescript-vim'
+
+Plug 'puremourning/vimspector'
 
 call plug#end()
 
@@ -55,6 +49,30 @@ set termguicolors
 colorscheme gruvbox
 let g:gruvbox_contrast_light = 'medium'
 let g:gruvbox_contrast_dark = 'medium'
+
+" telescope
+lua << EOF
+local actions = require("telescope.actions")
+require("telescope").setup{
+    defaults = {
+        mappings = {
+            i = {
+                ["<esc>"] = actions.close,
+                ["<C-j>"] = actions.move_selection_next,
+                ["<C-k>"] = actions.move_selection_previous,
+            }
+        }
+    }
+}
+require("telescope").load_extension('coc')
+require("telescope").load_extension('fzf')
+EOF
+
+" fzf/telescope
+nmap <Leader>g <cmd>Telescope grep_string<CR>
+nmap <C-p> <cmd>Telescope find_files<CR>
+nmap <Leader>o <cmd>lua require'telescope-config'.project_files()<CR>
+nmap <Leader>w <cmd>Telescope buffers<CR>
 
 " coc
 let g:coc_filetype_map = {
@@ -73,11 +91,11 @@ function! s:show_documentation()
 endfunction
 
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gd <cmd>Telescope coc definitions<CR>
 nmap <silent> <C-w>gd :<C-u>call CocAction('jumpDefinition', 'tab drop')<cr>
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gy <cmd>Telescope coc type_definitions<CR>
+nmap <silent> gi <cmd>Telescope coc implementations<CR>
+nmap <silent> gr <cmd>Telescope coc references_used<CR>
 
 nmap <leader>rf <Plug>(coc-refactor)
 nmap <leader>rn <Plug>(coc-rename)
@@ -100,7 +118,7 @@ nmap <silent> <C-s> <Plug>(coc-range-select)
 xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Diagnostic list
-nnoremap <silent><nowait> <Leader>; :<C-u>CocList diagnostics<cr>
+nnoremap <silent><nowait> <Leader>; <cmd>Telescope coc diagnostics<cr>
 
 augroup tsgroup
   autocmd!
@@ -119,19 +137,16 @@ endfunction
 xmap <leader>a <Plug>(coc-codeaction-selected)
 nmap <leader>a <Plug>(coc-codeaction-selected)
 nmap <leader>ac <Plug>(coc-codeaction)
-nmap <leader>A <Plug>(coc-codeaction-selected)l
+nmap <leader>A <cmd>Telescope coc code_actions<cr>
 
 " CocLists
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-nnoremap <silent> <space>t  :<C-u>CocList outline<cr>
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <Leader>c  <cmd>Telescope coc commands<cr>
+nnoremap <silent> <Leader>t  <cmd>Telescope coc document_symbols<cr>
+nnoremap <silent> <Leader>s  <cmd>Telescope coc workspace_symbols<cr>
 " Do default action for next item.
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-
-" ctrl-p
-" let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
 " coc completion/old deoplete stuff
 " let g:deoplete#enable_at_startup = 1
@@ -155,23 +170,24 @@ let g:coc_snippet_next = '<tab>'
 " coc other
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
+" vimspector
+
+let g:vimspector_enable_mappings = 'HUMAN'
+
+" debug inspect
+" for normal mode - the word under the cursor
+nmap <Leader>di <Plug>VimspectorBalloonEval
+" for visual mode, the visually selected text
+xmap <Leader>di <Plug>VimspectorBalloonEval
+
+command! VimspectorLaunch call vimspector#Launch()
+
 " fireplace
 nnoremap <buffer> <silent> <Leader>e :Eval<CR>
 nnoremap <buffer> <silent> <Leader>E :%Eval<CR>
 
-" fzf
-nmap <Leader>g :Ag <C-r><C-w><CR>
-nmap <C-p> :Files<CR>
-nmap <Leader>o :GFiles<CR>
-nmap <Leader>w :Buffers<CR>
-
 " rust
 let g:rustfmt_autosave = 1
-
-" telescope
-lua << EOF
-require("telescope").load_extension('coc')
-EOF
 
 set autoindent
 set autoread
@@ -285,7 +301,9 @@ let g:startify_custom_header_quotes = [
     \ ['LISTEN UP NERD, THE WEIGHTS WITH HIEROGLYPHS ON THEM ARE IMPOSSIBLE TO LIFT UNLESS YOU POSSESS THE CORRESPONDING RUNESTONE, THIS IS HELL GYM'],
     \ ['the vatican should not be allowed to name any new saints until God sorts out my numerous issues with the citibank web portal'],
     \ ["in a world where big data threatens to commodify our lives,. telling online surveys that i \"Don't Know\" what pringles are constitutes Heroism"],
-    \ ['buy shares in the Markets.  i have a really good feeling about the markets']
+    \ ['buy shares in the Markets.  i have a really good feeling about the markets'],
+    \ ['wiccan lawyer'],
+    \ ['desperately trying to start a conversation at dragoncon by flaunting a timepiece']
     \ ]
 
 set exrc
